@@ -1,0 +1,65 @@
+###################### Default VPC ######################
+
+data "aws_vpc" "default" {
+
+    default = true
+
+}
+
+ 
+data "aws_subnet_ids" "subnet" {
+
+    vpc_id = data.aws_vpc.default.id
+
+}
+
+
+############ Creating Security Group for EC2 & ELB ############
+
+resource "aws_security_group" "codestar-sg" {
+    name = "codestar-sg"
+    description = "Allow incoming HTTP connections"
+    ingress {
+        from_port = 0
+        to_port = 500
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+    
+    egress {
+        from_port = 0
+        to_port = 0
+        protocol = "-1"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+}
+    
+ ################## Creating 2 EC2 Instances ##################
+
+resource "aws_instance" "codestar-1" {
+  ami = "ami-052efd3df9dad4825"
+  instance_type = "t2.micro"
+  key_name        = "anhbn"
+  security_groups = ["${aws_security_group.codestar-sg.name}"]
+
+  tags = {
+
+    Name = "codestar-1"
+    
+  }
+}
+
+resource "aws_instance" "codestar-2" {
+  ami           = "ami-052efd3df9dad4825" 
+  instance_type = "t2.micro"
+  security_groups = ["${aws_security_group.codestar-sg.name}"]
+
+
+  tags = {
+
+    Name = "codestar-2"
+    
+  }
+}
+
+

@@ -1,0 +1,79 @@
+{
+  "requiresAttributes": [],
+  "taskDefinitionArn": "arn:aws:ecs:us-east-1:996820535158:task-definition/wordpress-task:2",
+  "status": "ACTIVE",
+  "revision": 2,
+  "containerDefinitions": [
+    {
+      "volumesFrom": [],
+      "memory": 128,
+      "extraHosts": null,
+      "dnsServers": null,
+      "disableNetworking": null,
+      "dnsSearchDomains": null,
+      "portMappings": [
+        {
+          "hostPort": 8080,
+          "containerPort": 80,
+          "protocol": "tcp"
+        }
+      ],
+      "hostname": null,
+      "essential": true,
+      "entryPoint": null,
+      "mountPoints": [],
+      "name": "wordpress",
+      "ulimits": null,
+      "dockerSecurityOptions": null,
+      "environment": [],
+      "links": [
+        "mysql:mysql"
+      ],
+      "workingDirectory": null,
+      "readonlyRootFilesystem": null,
+      "image": "wordpress",
+      "command": null,
+      "user": null,
+      "dockerLabels": null,
+      "logConfiguration": null,
+      "cpu": 500,
+      "privileged": null,
+      "expanded": false
+    },
+    {
+      "volumesFrom": [],
+      "memory": 128,
+      "extraHosts": null,
+      "dnsServers": null,
+      "disableNetworking": null,
+      "dnsSearchDomains": null,
+      "portMappings": [],
+      "hostname": null,
+      "essential": true,
+      "entryPoint": null,
+      "mountPoints": [],
+      "name": "mysql",
+      "ulimits": null,
+      "dockerSecurityOptions": null,
+      "environment": [
+        {
+          "name": "MYSQL_ROOT_PASSWORD",
+          "value": "root"
+        }
+      ],
+      "links": null,
+      "workingDirectory": null,
+      "readonlyRootFilesystem": null,
+      "image": "mysql:latest",
+      "command": null,
+      "user": null,
+      "dockerLabels": null,
+      "logConfiguration": null,
+      "cpu": 500,
+      "privileged": null,
+      "expanded": false
+    }
+  ],
+  "volumes": [],
+  "family": "wordpress-task"
+}

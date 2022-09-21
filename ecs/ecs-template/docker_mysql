@@ -1,0 +1,16 @@
+Gia hạn bản quyền và bảo trì hệ thống LOS (Loan Origination System)
+
+1. Create the network.
+
+ docker network create todo-app
+
+2. 
+ docker run -d \
+     --network todo-app --network-alias mysql \
+     -v todo-mysql-data:/var/lib/mysql \
+     -e MYSQL_ROOT_PASSWORD=secret \
+     -e MYSQL_DATABASE=todos \
+     mysql:5.7
+
+3. lauch app:
+docker run -it --network todo-app nicolaka/netshoot

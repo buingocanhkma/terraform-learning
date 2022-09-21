@@ -1,0 +1,109 @@
+provider aws {
+  region = "us-east-1"
+  access_key = "AKIAQDV6LAORMIM6I75B"
+  secret_key = "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"
+}
+
+resource "aws_vpc" "my_vpc" {
+  cidr_block = "10.10.0.0/16"
+
+  tags = {
+    Name = "my_vpc"
+  }
+}
+
+resource "aws_internet_gateway" "gw" {
+  vpc_id = aws_vpc.my_vpc.id
+
+  tags = {
+    Name = "gw_my_vpc"
+  }
+}
+
+resource "aws_subnet" "my_subnet" {
+  vpc_id            = aws_vpc.my_vpc.id
+  cidr_block        = "10.10.3.0/24"
+  availability_zone = "us-east-1c"
+  map_public_ip_on_launch = true
+
+  tags = {
+    Name = "public-subnet-1c"
+  }
+}
+
+############ Creating Security Group for EC2 & ELB ############
+
+resource "aws_security_group" "demo" {
+    name = "demo"
+    description = "Allow incoming HTTP connections"
+    vpc_id = "${aws_vpc.my_vpc.id}"
+    ingress {
+        from_port = 0
+        to_port = 22
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+    
+    egress {
+        from_port = 0
+        to_port = 0
+        protocol = "-1"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+}
+#resource "aws_network_interface" "foo" {
+#  subnet_id   = aws_subnet.my_subnet.id
+#  private_ips = ["10.0.3.100"]
+
+#  tags = {
+#    Name = "foo_network_interface"
+#  }
+#}
+
+#resource "aws_network_interface" "prima" {
+#  subnet_id   = aws_subnet.my_subnet.id
+#  private_ips = ["10.0.3.102"]
+
+#  tags = {
+#    Name = "primary_network_interface"
+#  }
+#}
+
+resource "aws_instance" "foo" {
+  ami           = "ami-052efd3df9dad4825" # us-west-2
+  instance_type = "t2.micro"
+  subnet_id = aws_subnet.my_subnet.id
+  depends_on = [aws_internet_gateway.gw]
+  security_groups = ["${aws_security_group.demo.name}"]
+  #network_interface {
+  #  network_interface_id = aws_network_interface.foo.id
+  #  device_index         = 0
+  #}
+
+  tags = {
+
+    Name = "foo"
+    
+  }
+}
+
+
+resource "aws_instance" "prima" {
+  ami = "ami-052efd3df9dad4825"
+  instance_type = "t2.micro"
+  #subnet_id = "subnet-036edb0d3ba84c41f"
+  key_name        = "anhbn"
+  subnet_id = aws_subnet.my_subnet.id
+  depends_on = [aws_internet_gateway.gw]
+  security_groups = ["${aws_security_group.demo.name}"]
+  #network_interface {
+  #  network_interface_id = aws_network_interface.prima.id
+  #  device_index         = 0
+  #}
+
+  tags = {
+
+    Name = "prima"
+    
+  }
+}
