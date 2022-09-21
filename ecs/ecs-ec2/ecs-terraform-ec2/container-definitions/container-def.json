@@ -1,0 +1,21 @@
+[
+    {
+      "name": "paint-color",
+      "image": "public.ecr.aws/u9k9y6u6/codestar:paint-v1.0",
+      "cpu": 10,
+      "memory": 256,
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 80
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": { 
+          "awslogs-group" : "/ecs/frontend-container",
+          "awslogs-region": "us-east-1"
+        }
+      }
+    }
+]
